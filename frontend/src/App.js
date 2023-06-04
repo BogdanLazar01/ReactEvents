@@ -14,6 +14,11 @@ import EditEventPage from "./pages/EditEvent";
 import EventLayout from "./pages/EventsLayout";
 import { action as manipulateEventAction } from "./components/EventForm";
 import NewsletterPage, { action as newsletterAction } from "./pages/Newsletter";
+import AuthenticationPage, {
+  action as authAction,
+} from "./pages/Authentication";
+import { action as logoutAction } from "./pages/Logout";
+import { checkAuthLoader, tokenLoader } from "./util/auth";
 
 // 1. Add five new (dummy) page components (content can be simple <h1> elements)
 //    - HomePage
@@ -40,6 +45,8 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     errorElement: <ErrorPage />,
+    id: "root",
+    loader: tokenLoader,
     children: [
       { index: true, element: <HomePage /> },
       {
@@ -65,21 +72,31 @@ const router = createBrowserRouter([
                 path: "edit",
                 element: <EditEventPage />,
                 action: manipulateEventAction,
+                loader: checkAuthLoader,
               },
             ],
           },
-
           {
             path: "new",
             element: <NewEventPage />,
             action: manipulateEventAction,
+            loader: checkAuthLoader,
           },
         ],
+      },
+      {
+        path: "auth",
+        element: <AuthenticationPage />,
+        action: authAction,
       },
       {
         path: "newsletter",
         element: <NewsletterPage />,
         action: newsletterAction,
+      },
+      {
+        path: "logout",
+        action: logoutAction,
       },
     ],
   },
